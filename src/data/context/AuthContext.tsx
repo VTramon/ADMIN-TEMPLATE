@@ -2,36 +2,34 @@ import { createContext, useState, useEffect } from "react";
 import Cookies from "js-cookie";
 import route from "next/router";
 import firebase from "../../firebase/config";
-import Usuario from "../../model/Usuario";
+import User from "../../model/User";
 
 interface AuthContextProps {
-  usuario?: Usuario;
-  carregando?: boolean;
+  user?: User;
+  loading?: boolean;
   loginGoogle?: () => Promise<void>;
   login?: (email: string, senha: string) => Promise<void>;
-  cadastrar?: (email: string, senha: string) => Promise<void>;
+  register?: (email: string, senha: string) => Promise<void>;
   logout?: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextProps>({});
 
-async function usuarioNormalizado(
-  usuarioFirebase: firebase.User
-): Promise<Usuario> {
-  const token = await usuarioFirebase.getIdToken();
+async function normalizedUser(firebaseUser: firebase.User): Promise<User> {
+  const token = await firebaseUser.getIdToken();
   return {
-    uid: usuarioFirebase.uid,
-    nome: usuarioFirebase.displayName,
-    email: usuarioFirebase.email,
+    uid: firebaseUser.uid,
+    name: firebaseUser.displayName,
+    email: firebaseUser.email,
     token,
-    provedor: usuarioFirebase.providerData[0].providerId,
-    imagemUrl: usuarioFirebase.photoURL,
+    provider: firebaseUser.providerData[0].providerId,
+    imageUrl: firebaseUser.photoURL,
   };
 }
 
-function gerenciarCookie(logado: boolean) {
-  if (logado) {
-    Cookies.set("admin-template-cod3r-auth", logado, {
+function manageCookie(logged: boolean) {
+  if (logged) {
+    Cookies.set("admin-template-cod3r-auth", logged, {
       expires: 7,
     });
   } else {
@@ -40,92 +38,92 @@ function gerenciarCookie(logado: boolean) {
 }
 
 export function AuthProvider(props) {
-  const [carregando, setCarregando] = useState(true);
-  const [usuario, setUsuario] = useState<Usuario>(null);
+  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState<User>(null);
 
-  async function configurarSessao(usuarioFirebase) {
-    if (usuarioFirebase?.email) {
-      const usuario = await usuarioNormalizado(usuarioFirebase);
-      setUsuario(usuario);
-      gerenciarCookie(true);
-      setCarregando(false);
-      return usuario.email;
+  async function toSetUpSession(firebaseUser) {
+    if (firebaseUser?.email) {
+      const user = await normalizedUser(firebaseUser);
+      setUser(user);
+      manageCookie(true);
+      setLoading(false);
+      return user.email;
     } else {
-      setUsuario(null);
-      gerenciarCookie(false);
-      setCarregando(false);
+      setUser(null);
+      manageCookie(false);
+      setLoading(false);
       return false;
     }
   }
 
   async function loginGoogle() {
     try {
-      setCarregando(true);
+      setLoading(true);
       const resp = await firebase
         .auth()
         .signInWithPopup(new firebase.auth.GoogleAuthProvider());
 
-      await configurarSessao(resp.user);
+      await toSetUpSession(resp.user);
       route.push("/");
     } finally {
-      setCarregando(false);
+      setLoading(false);
     }
   }
 
-  async function login(email, senha) {
+  async function login(email, password) {
     try {
-      setCarregando(true);
+      setLoading(true);
       const resp = await firebase
         .auth()
-        .signInWithEmailAndPassword(email, senha);
+        .signInWithEmailAndPassword(email, password);
 
-      await configurarSessao(resp.user);
+      await toSetUpSession(resp.user);
       route.push("/");
     } finally {
-      setCarregando(false);
+      setLoading(false);
     }
   }
 
-  async function cadastrar(email, senha) {
+  async function register(email, password) {
     try {
-      setCarregando(true);
+      setLoading(true);
       const resp = await firebase
         .auth()
-        .createUserWithEmailAndPassword(email, senha);
+        .createUserWithEmailAndPassword(email, password);
 
-      await configurarSessao(resp.user);
+      await toSetUpSession(resp.user);
       route.push("/");
     } finally {
-      setCarregando(false);
+      setLoading(false);
     }
   }
 
   async function logout() {
     try {
-      setCarregando(true);
+      setLoading(true);
       await firebase.auth().signOut();
-      await configurarSessao(null);
+      await toSetUpSession(null);
     } finally {
-      setCarregando(false);
+      setLoading(false);
     }
   }
 
   useEffect(() => {
     if (Cookies.get("admin-template-cod3r-auth")) {
-      const cancelar = firebase.auth().onIdTokenChanged(configurarSessao);
-      return () => cancelar();
+      const cancel = firebase.auth().onIdTokenChanged(toSetUpSession);
+      return () => cancel();
     } else {
-      setCarregando(false);
+      setLoading(false);
     }
   }, []);
 
   return (
     <AuthContext.Provider
       value={{
-        usuario,
-        carregando,
+        user,
+        loading,
         login,
-        cadastrar,
+        register,
         loginGoogle,
         logout,
       }}

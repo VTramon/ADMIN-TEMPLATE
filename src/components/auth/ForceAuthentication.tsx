@@ -1,11 +1,11 @@
 import Head from "next/head";
-import loading from "../../../public/images/loading.gif";
+import loadingImage from "../../../public/images/loading.gif";
 import Image from "next/image";
 import useAuth from "../../data/hook/useAuth";
 import router from "next/router";
 
 export default function ForcarAutenticacao(props) {
-  const { usuario, carregando } = useAuth();
+  const { user, loading } = useAuth();
 
   function renderizarConteudo() {
     return (
@@ -33,13 +33,13 @@ export default function ForcarAutenticacao(props) {
                 flex justify-center items-center h-screen
             `}
       >
-        <Image src={loading} alt="imagem de loading" />
+        <Image src={loadingImage} alt="imagem de loading" />
       </div>
     );
   }
-  if (!carregando && usuario?.email) {
+  if (!loading && user?.email) {
     return renderizarConteudo();
-  } else if (carregando) {
+  } else if (loading) {
     return renderizarCarregando();
   } else {
     router.push("/autenticacao");

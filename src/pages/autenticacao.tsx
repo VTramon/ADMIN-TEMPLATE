@@ -2,31 +2,31 @@
 import { useState } from "react";
 import AuthInput from "../components/auth/AuthInput";
 import Image from "next/image";
-import { IconeAtencao, IconeLua } from "../components/icons";
+import { WarningIcon, MoonIcon } from "../components/icons";
 import useAuth from "../data/hook/useAuth";
 
 export default function Autenticacao() {
-  const { cadastrar, login, loginGoogle } = useAuth();
+  const { register, login, loginGoogle } = useAuth();
 
-  const [modo, setModo] = useState<"login" | "cadastro">("login");
+  const [mode, setMode] = useState<"login" | "cadastro">("login");
   const [email, setEmail] = useState("");
-  const [senha, setSenha] = useState("");
-  const [erro, setErro] = useState(null);
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState(null);
 
-  function exibirErro(msg, tempoEmSegundos = 5) {
-    setErro(msg);
-    setTimeout(() => setErro(null), tempoEmSegundos * 1000);
+  function displayError(msg, timeInSeconds = 5) {
+    setError(msg);
+    setTimeout(() => setError(null), timeInSeconds * 1000);
   }
 
-  async function submeter() {
+  async function submit() {
     try {
-      if (modo === "login") {
-        await login(email, senha);
+      if (mode === "login") {
+        await login(email, password);
       } else {
-        await cadastrar(email, senha);
+        await register(email, password);
       }
     } catch (e) {
-      exibirErro(e?.message ?? "Erro inesperado");
+      displayError(e?.message ?? "Erro inesperado");
     }
   }
 
@@ -45,11 +45,11 @@ export default function Autenticacao() {
         text-3xl font-bold mb-5 
         `}
         >
-          {modo === "login"
+          {mode === "login"
             ? "Entre com a sua conta"
             : "Cadastre-se na plataforma"}
         </h1>
-        {erro ? (
+        {error ? (
           <div
             className={`
           flex items-center
@@ -57,35 +57,35 @@ export default function Autenticacao() {
           border border-red-700 rounded-lg
           `}
           >
-            {IconeAtencao(6)}
-            <span className="ml-3">{erro}</span>
+            {WarningIcon(6)}
+            <span className="ml-3">{error}</span>
           </div>
         ) : (
           false
         )}
 
         <AuthInput
-          tipo="email"
+          type="email"
           label="Email"
-          valor={email}
-          valorMudou={setEmail}
-          obrigatorio
+          value={email}
+          valueChanged={setEmail}
+          mandatory
         />
         <AuthInput
-          tipo="password"
+          type="password"
           label="Senha"
-          valor={senha}
-          valorMudou={setSenha}
-          obrigatorio
+          value={password}
+          valueChanged={setPassword}
+          mandatory
         />
         <button
-          onClick={submeter}
+          onClick={submit}
           className={`
         w-full bg-indigo-500 hover:bg-indigo-400
         text-white rounded-lg px-4 py-3 mt-6
         `}
         >
-          {modo === "login" ? "Entrar" : "Cadastrar"}
+          {mode === "login" ? "Entrar" : "Cadastrar"}
         </button>
 
         <hr className="my-6 border-gray-300 w-full" />
@@ -99,12 +99,12 @@ export default function Autenticacao() {
         >
           Entrar com Google
         </button>
-        {modo === "login" ? (
+        {mode === "login" ? (
           <p className="mt-8">
             Novo por aqui?
             <a
               href="#"
-              onClick={() => setModo("cadastro")}
+              onClick={() => setMode("cadastro")}
               className={`
               text-blue-500 hover:text-blue-700 font-semibold pl-2
               cursor-poiter
@@ -118,7 +118,7 @@ export default function Autenticacao() {
             Já faz parte da nossa comunidade?
             <a
               href="#"
-              onClick={() => setModo("login")}
+              onClick={() => setMode("login")}
               className={`
             text-blue-500 hover:text-blue-700 font-semibold pl-2
             cursor-poiter

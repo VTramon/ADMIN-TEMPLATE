@@ -1,6 +1,6 @@
 // Para mais ícones acessar... https://heroicons.com/
 
-export const IconeCasa = (
+export const HomeIcon = (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     className="h-6 w-6"
@@ -17,7 +17,7 @@ export const IconeCasa = (
   </svg>
 );
 
-export const IconeAjustes = (
+export const SettingsIcon = (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     className="h-6 w-6"
@@ -34,7 +34,7 @@ export const IconeAjustes = (
   </svg>
 );
 
-export const IconeSino = (
+export const BellIcon = (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     className="h-6 w-6"
@@ -51,7 +51,7 @@ export const IconeSino = (
   </svg>
 );
 
-export const IconeSair = (
+export const ExitIcon = (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     className="h-6 w-6"
@@ -68,7 +68,7 @@ export const IconeSair = (
   </svg>
 );
 
-export const IconeSol = (size) => (
+export const SunIcon = (size) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     className={`h-${size} w-${size}`}
@@ -85,7 +85,7 @@ export const IconeSol = (size) => (
   </svg>
 );
 
-export const IconeLua = (size) => (
+export const MoonIcon = (size) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     className={`h-${size} w-${size}`}
@@ -102,7 +102,7 @@ export const IconeLua = (size) => (
   </svg>
 );
 
-export const IconeAtencao = (size) => (
+export const WarningIcon = (size) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     className="h-6 w-6"

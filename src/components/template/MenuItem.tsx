@@ -2,14 +2,14 @@ import Link from "next/link";
 
 interface MenuItemProps {
   url?: string;
-  texto: string;
-  icone: any;
+  text: string;
+  icon: any;
   className?: string;
   onClick?: (evento: any) => void;
 }
 
 export default function MenuItem(props: MenuItemProps) {
-  function renderizarLink() {
+  function renderLink() {
     return (
       <a
         className={`
@@ -20,13 +20,13 @@ export default function MenuItem(props: MenuItemProps) {
         ${props.className}
     `}
       >
-        {props.icone}
+        {props.icon}
         <span
           className={`
         text-xs font-light
       `}
         >
-          {props.texto}
+          {props.text}
         </span>
       </a>
     );
@@ -37,11 +37,7 @@ export default function MenuItem(props: MenuItemProps) {
       onClick={props.onClick}
       className={`hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer`}
     >
-      {props.url ? (
-        <Link href={props.url}>{renderizarLink()}</Link>
-      ) : (
-        renderizarLink()
-      )}
+      {props.url ? <Link href={props.url}>{renderLink()}</Link> : renderLink()}
     </li>
   );
 }
