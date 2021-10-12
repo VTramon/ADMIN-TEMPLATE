@@ -1,10 +1,10 @@
-import Layout from "../components/template/Layout";
+import Layout from '../components/template/Layout';
 
 export default function Home() {
   return (
     <Layout
-      titulo="Página inicial"
-      subtitulo="Estamos construindo um template ADMIN"
+      title={'Página inicial'}
+      subtitle={'Estamos construindo um template ADMIN'}
     >
       <h3>Conteudo!!!</h3>
     </Layout>

@@ -1,13 +1,13 @@
-import useAppData from "../../data/hook/useAppData";
-import ForceAuthentication from "../auth/ForceAuthentication";
-import Header from "./Header";
-import Content from "./Content";
-import MenuSide from "./MenuSide";
+import useAppData from '../../data/hook/useAppData';
+import ForceAuthentication from '../auth/ForceAuthentication';
+import Header from './Header';
+import Content from './Content';
+import MenuSide from './MenuSide';
 
 interface LayoutProps {
   title: string;
   subtitle: string;
-  children: any;
+  children?: any;
 }
 
 export default function Layout(props: LayoutProps) {
